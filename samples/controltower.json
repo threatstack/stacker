@@ -1,0 +1,47 @@
+{
+  "version": "0",
+  "id": "999cccaa-eaaa-0000-1111-123456789012",
+  "detail-type": "AWS Service Event via CloudTrail",
+  "source": "aws.organizations",
+  "account": "123456789012",
+  "time": "2018-08-30T21:42:18Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+    "eventVersion": "1.08",
+    "userIdentity": {
+        "accountId": "123456789012",
+        "invokedBy": "AWS Internal"
+    },
+    "eventTime": "2022-05-17T12:10:39Z",
+    "eventSource": "controltower.amazonaws.com",
+    "eventName": "CreateManagedAccount",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "AWS Internal",
+    "userAgent": "AWS Internal",
+    "requestParameters": null,
+    "responseElements": null,
+    "eventID": "28e3146e-1b40-4042-a957-4fe26abaacf7",
+    "readOnly": false,
+    "eventType": "AwsServiceEvent",
+    "managementEvent": true,
+    "recipientAccountId": "123456789012",
+    "serviceEventDetails": {
+        "createManagedAccountStatus": {
+            "organizationalUnit": {
+                "organizationalUnitName": "Sandbox",
+                "organizationalUnitId": "ou-idan-pagpa42q"
+            },
+            "account": {
+                "accountName": "ctower-test-2",
+                "accountId": "155658925797"
+            },
+            "state": "SUCCEEDED",
+            "message": "AWS Control Tower successfully created an enrolled account.",
+            "requestedTimestamp": "2022-05-17T11:55:28+0000",
+            "completedTimestamp": "2022-05-17T12:10:39+0000"
+        }
+    },
+    "eventCategory": "Management"
+  }
+}
