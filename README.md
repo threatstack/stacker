@@ -7,12 +7,16 @@ This integration only works on account creation. Further updating of policies (i
 `stacker` requires a universally deployed role that it can use to create the IAM role in a brand new AWS account. If you're using the AWS Organizations API, it's common to have a `OrganizationAccountAccessRole` IAM role provisioned automatically with every new account that can be used for this purpose. If you're using Control Tower, `AWSControlTowerExecution` is the role you want to use instead.
 
 ## Configuration and Deployment
+
+### Terraform
 Take a look at `deploy.tf` to deploy all of the following using Terraform. This file is meant to be customized for your environment.
 
-### Parameter Store
+### Manual Setup
+
+#### Parameter Store
 [Create a SecureString parameter](https://us-east-1.console.aws.amazon.com/systems-manager/parameters/create?region=us-east-1&tab=Table) that has your F5 AIP REST API key in it. You can find this information in the F5 AIP UI - click "Settings" on the left, then click to "Application Keys" on the top navigation bar.
 
-### Lambda IAM Role
+#### Lambda IAM Role
 Create an IAM role for your Lambda job. It will need the ability to sts:AssumeRole into whichever universally deployed role is available across your account structure (see "Requirements" above), write logs to CloudWatch, and pull a value from SSM Parameter Store.
 
 With the IAM policy below, remember to replace:
@@ -20,8 +24,6 @@ With the IAM policy below, remember to replace:
 * `API_KEY_ID` with the parameter name of your API key
 * `UNIVERSALLY_DEPLOYED_ROLE` with `OrganizationAccountAccessRole` or `AWSControlTowerExecution` (or a custom value, if you've set that up yourself.)
 * `KEY_ID` for the KMS key ID used to encrypt the SSM SecureString value
-
-#### IAM Policy
 ```
 {
   "Version": "2012-10-17",
@@ -61,7 +63,7 @@ With the IAM policy below, remember to replace:
 }
 ```
 
-### Lambda Environment
+#### Lambda Environment
 Create a new integration in Lambda, and use these variables to configure the function
 
 | Variable                         | Required | Description                                                                   |
@@ -74,7 +76,7 @@ Create a new integration in Lambda, and use these variables to configure the fun
 | F5_ORG_ID                        | Yes      | F5 AIP Organization ID - check Settings => Application Keys in the UI.  |
 | F5_USER_ID                       | Yes      | F5 AIP User ID - check Settings => Application Keys in the UI.          |
 
-### EventBridge
+#### EventBridge
 Next, set up an [EventBridge rule](https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules/create) to notify the `stacker` lambda function when a new account is created. 
 
 We recommend performing the action on account creation. This API call happens regardless of using the Organizations API or Control Tower. The rule pattern you'll want to use for AWS Organizations API notification is: 
