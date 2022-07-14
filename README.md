@@ -1,10 +1,10 @@
 # Stacker
-`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration for EC2 sync when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the CreateAccountResult event) _or_ the AWS Control Tower API (the CreateManagedAccount event).
+`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration for EC2 sync when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the `CreateAccountResult` event) _or_ the AWS Control Tower API (the `CreateManagedAccount` event).
 
 ## Requirements
 This integration only works on account creation. Further updating of policies (ie. if F5 AIP introduces new functionality) will need to be handled separately.
 
-`stacker` requires a universally deployed role that it can use to create the IAM role in a brand new AWS account. If you're using the AWS Organizations API, it's common to have a `OrganizationAccountAccessRole` IAM role provisioned automatically with every new account that can be used for this purpose. If you're using Control Tower, `AWSControlTowerExecution` is the role you want to use instead.
+`stacker` requires a universally deployed role that it can use to create the IAM role in a brand new AWS account. If you're using the AWS Organizations API, it's common to have a `OrganizationAccountAccessRole` IAM role provisioned automatically with every new account that can be used for this purpose. If you're using Control Tower, `AWSControlTowerExecution` is the role you want to use instead. 
 
 ## Configuration and Deployment
 
