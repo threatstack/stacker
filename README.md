@@ -1,8 +1,8 @@
 # Stacker
-`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration for EC2 sync when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the `CreateAccountResult` event) _or_ the AWS Control Tower API (the `CreateManagedAccount` event).
+`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration for EC2 sync when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the `CreateAccountResult` event) **or** the AWS Control Tower API (the `CreateManagedAccount` event).
 
 ## Requirements
-This integration only works on account creation. Further updating of policies (ie. if F5 AIP introduces new functionality) will need to be handled separately.
+This integration only works on account creation. Further updating of policies (for example, if F5 AIP introduces new functionality) will need to be handled separately.
 
 `stacker` requires a universally deployed role that it can use to create the IAM role in a brand new AWS account. If you're using the AWS Organizations API, it's common to have a `OrganizationAccountAccessRole` IAM role provisioned automatically with every new account that can be used for this purpose. If you're using Control Tower, `AWSControlTowerExecution` is the role you want to use instead. 
 
@@ -11,12 +11,12 @@ This integration only works on account creation. Further updating of policies (i
 ### Terraform
 Take a look at [deploy.tf](deploy.tf) to deploy all of the following using Terraform. This file is meant to be customized for your environment.
 
-**Note:** If you use our terraform deployment, you'll still need to create the SecureString parameter manually since we prefer not to store the API key in the terraform state. Your threat model may differ. Reference the "Parameter Store" step below for instructions on how to do that through the AWS Console.
+**Note:** If you use our Terraform deployment, you'll still need to create the SecureString parameter manually since we prefer not to store the API key in the Terraform state. Your threat model may differ. Reference the "Parameter Store" step below for instructions on how to do that through the AWS Console.
 
 ### Manual Setup
 
 #### Parameter Store
-[Create a SecureString parameter](https://console.aws.amazon.com/systems-manager/parameters/create) that has your F5 AIP REST API key in it. You can find this information in the F5 AIP UI - click "Settings" on the left, then click to "Application Keys" on the top navigation bar.
+[Create a SecureString parameter](https://console.aws.amazon.com/systems-manager/parameters/create) that has your F5 AIP REST API key in it. You can find this information in the F5 AIP UI - click "Settings" on the left, then click "Application Keys" on the top navigation bar.
 
 #### Lambda IAM Role
 Create an IAM role for your Lambda job. It will need the ability to sts:AssumeRole into whichever universally deployed role is available across your account structure (see "Requirements" above), write logs to CloudWatch, and pull a value from SSM Parameter Store.
@@ -24,7 +24,7 @@ Create an IAM role for your Lambda job. It will need the ability to sts:AssumeRo
 With the IAM policy below, remember to replace:
 * `ACCOUNT_ID` with your organization account ID number
 * `API_KEY_ID` with the parameter name of your API key
-* `UNIVERSALLY_DEPLOYED_ROLE` with `OrganizationAccountAccessRole` or `AWSControlTowerExecution` (or a custom value, if you've set that up yourself.)
+* `UNIVERSALLY_DEPLOYED_ROLE` with `OrganizationAccountAccessRole` or `AWSControlTowerExecution` (or a custom value, if you've set that up yourself).
 * `KEY_ID` for the KMS key ID used to encrypt the SSM SecureString value
 ```
 {
@@ -66,7 +66,7 @@ With the IAM policy below, remember to replace:
 ```
 
 #### Lambda Environment
-Create a new integration in Lambda, and use these variables to configure the function
+Create a new integration in Lambda, and use these variables to configure the function:
 
 | Variable                         | Required | Description                                                                   |
 |----------------------------------|----------|-------------------------------------------------------------------------------|
@@ -81,7 +81,7 @@ Create a new integration in Lambda, and use these variables to configure the fun
 #### EventBridge
 Next, set up an [EventBridge rule](https://console.aws.amazon.com/events/home?region=us-east-1#/rules/create) to notify the `stacker` lambda function when a new account is created. 
 
-We recommend performing the action on account creation. This API call happens regardless of using the Organizations API or Control Tower. The rule pattern you'll want to use for AWS Organizations API notification is: 
+We recommend performing the action on account creation. This API call happens for both the Organizations API or Control Tower. The rule pattern you'll want to use for AWS Organizations API notification is: 
 ```
 {
   "detail-type": ["AWS Service Event via CloudTrail"],
