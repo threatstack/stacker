@@ -1,5 +1,5 @@
 # Stacker
-`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the CreateAccountResult event) _or_ the AWS Control Tower API (the CreateManagedAccount event).
+`stacker` is a golang-based AWS Lambda function that will set up a F5 Application Infrastructure Protection (AIP/Threat Stack) AWS integration for EC2 sync when a new account is created in your AWS organization. It can handle AWS EventBridge notifications from the AWS Organizations API (specifically, the CreateAccountResult event) _or_ the AWS Control Tower API (the CreateManagedAccount event).
 
 ## Requirements
 This integration only works on account creation. Further updating of policies (ie. if F5 AIP introduces new functionality) will need to be handled separately.
@@ -9,12 +9,14 @@ This integration only works on account creation. Further updating of policies (i
 ## Configuration and Deployment
 
 ### Terraform
-Take a look at `deploy.tf` to deploy all of the following using Terraform. This file is meant to be customized for your environment.
+Take a look at [deploy.tf](deploy.tf) to deploy all of the following using Terraform. This file is meant to be customized for your environment.
+
+**Note:** If you use our terraform deployment, you'll still need to create the SecureString parameter manually since we prefer not to store the API key in the terraform state. Your threat model may differ. Reference the "Parameter Store" step below for instructions on how to do that through the AWS Console.
 
 ### Manual Setup
 
 #### Parameter Store
-[Create a SecureString parameter](https://us-east-1.console.aws.amazon.com/systems-manager/parameters/create?region=us-east-1&tab=Table) that has your F5 AIP REST API key in it. You can find this information in the F5 AIP UI - click "Settings" on the left, then click to "Application Keys" on the top navigation bar.
+[Create a SecureString parameter](https://console.aws.amazon.com/systems-manager/parameters/create) that has your F5 AIP REST API key in it. You can find this information in the F5 AIP UI - click "Settings" on the left, then click to "Application Keys" on the top navigation bar.
 
 #### Lambda IAM Role
 Create an IAM role for your Lambda job. It will need the ability to sts:AssumeRole into whichever universally deployed role is available across your account structure (see "Requirements" above), write logs to CloudWatch, and pull a value from SSM Parameter Store.
@@ -77,7 +79,7 @@ Create a new integration in Lambda, and use these variables to configure the fun
 | F5_USER_ID                       | Yes      | F5 AIP User ID - check Settings => Application Keys in the UI.          |
 
 #### EventBridge
-Next, set up an [EventBridge rule](https://us-east-1.console.aws.amazon.com/events/home?region=us-east-1#/rules/create) to notify the `stacker` lambda function when a new account is created. 
+Next, set up an [EventBridge rule](https://console.aws.amazon.com/events/home?region=us-east-1#/rules/create) to notify the `stacker` lambda function when a new account is created. 
 
 We recommend performing the action on account creation. This API call happens regardless of using the Organizations API or Control Tower. The rule pattern you'll want to use for AWS Organizations API notification is: 
 ```
