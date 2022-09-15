@@ -88,32 +88,48 @@ Next, set up an [EventBridge rule](https://console.aws.amazon.com/events/home?re
 We recommend performing the action on account creation. This API call happens for both the Organizations API or Control Tower. The rule pattern you'll want to use for AWS Organizations API notification is: 
 ```
 {
-  "detail-type": ["AWS Service Event via CloudTrail"],
-  "source": ["aws.organizations"],
   "detail": {
+    "eventName": [
+      "CreateAccountResult"
+    ],
     "serviceEventDetails": {
       "createAccountStatus": {
-        "state": ["SUCCEEDED"]
+        "state": [
+          "SUCCEEDED"
+        ]
       }
-    },
-    "eventName": ["CreateAccountResult"]
-  }
+    }
+  },
+  "detail-type": [
+    "AWS Service Event via CloudTrail"
+  ],
+  "source": [
+    "aws.organizations"
+  ]
 }
 ```
 
 If you'd rather listen for a notification from the AWS Control Tower service, you can use:
 ```
 {
-  "detail-type": ["AWS Service Event via CloudTrail"],
-  "source": ["aws.controltower"],
   "detail": {
+    "eventName": [
+      "CreateManagedAccount"
+    ],
     "serviceEventDetails": {
       "createManagedAccountStatus": {
-        "state": ["SUCCEEDED"]
+        "state": [
+          "SUCCEEDED"
+        ]
       }
-    },
-    "eventName": ["CreateManagedAccount"]
-  }
+    }
+  },
+  "detail-type": [
+    "AWS Service Event via CloudTrail"
+  ],
+  "source": [
+    "aws.controltower"
+  ]
 }
 ```
 

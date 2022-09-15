@@ -63,14 +63,14 @@ variable "targetRoleName" {
 
 # What event notification to use to set up the integration. Two options:
 # Organizations API:
-# {"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.organizations"],"detail":{"serviceEventDetails":{"createAccountStatus":{"state":["SUCCEEDED"]}},"eventName":["CreateAccountResult"]}}
+# {"detail": {"eventName":["CreateAccountResult"],"serviceEventDetails":{"createAccountStatus":{"state":["SUCCEEDED"]}}},"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.organizations"]}
 #
 # or Control Tower API:
-# {"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.controltower"],"detail":{"serviceEventDetails":{"createManagedAccountStatus":{"state":["SUCCEEDED"]}},"eventName":["CreateManagedAccount"]}}
+# {"detail": {"eventName":["CreateManagedAccount"],"serviceEventDetails":{"createManagedAccountStatus":{"state":["SUCCEEDED"]}}},"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.controltower"]}
 variable "eventBridgePattern" {
   type  = string
   default = <<EOF
-{"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.organizations"],"detail":{"serviceEventDetails":{"createAccountStatus":{"state":["SUCCEEDED"]}},"eventName":["CreateAccountResult"]}}
+{"detail": {"eventName":["CreateAccountResult"],"serviceEventDetails":{"createAccountStatus":{"state":["SUCCEEDED"]}}},"detail-type":["AWS Service Event via CloudTrail"],"source":["aws.organizations"]}
 EOF
 }
 ## End Configurable Values
