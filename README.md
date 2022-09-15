@@ -6,6 +6,10 @@ This integration only works on account creation. Further updating of policies (f
 
 `stacker` requires a universally deployed role that it can use to create the IAM role in a brand new AWS account. If you're using the AWS Organizations API, it's common to have a `OrganizationAccountAccessRole` IAM role provisioned automatically with every new account that can be used for this purpose. If you're using Control Tower, `AWSControlTowerExecution` is the role you want to use instead. 
 
+## Building the Lambda
+
+You'll need a golang toolchain installed. After that, simply run `make`. This will build a zip file with the Stacker binary and required JSON files that you'll need for configuration and deployment.
+
 ## Configuration and Deployment
 
 ### Terraform
@@ -36,12 +40,12 @@ With the IAM policy below, remember to replace:
       "Action": [
         "sts:AssumeRole",
         "ssm:GetParameter",
-        "kms:Decrypt
+        "kms:Decrypt"
       ],
       "Resource": [
         "arn:aws:iam::*:role/UNIVERSALLY_DEPLOYED_ROLE",
         "arn:aws:ssm:us-east-1:ACCOUNT_ID:parameter/API_KEY_ID",
-        "arn:aws:kms:us-east-1:ACCOUNT_ID:key/KEY_ID
+        "arn:aws:kms:us-east-1:ACCOUNT_ID:key/KEY_ID"
       ]
     },
     {
