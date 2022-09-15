@@ -173,6 +173,12 @@ resource "aws_cloudwatch_event_rule" "F5AIPInvoker" {
   event_pattern = var.eventBridgePattern
 }
 
+resource "aws_cloudwatch_event_target" "F5AIPInvoker" {
+  rule      = aws_cloudwatch_event_rule.F5AIPInvoker.name
+  target_id = "SendToAIPInvoker"
+  arn       = aws_lambda_function.F5AIPStacker.arn
+}
+
 resource "aws_lambda_permission" "allow_eventBridge" {
   statement_id  = "AllowExecutionFromEventBridge"
   action        = "lambda:InvokeFunction"
