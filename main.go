@@ -157,7 +157,7 @@ func f5AWSSetup(baseEndpoint string, creds f5aip.Config, targetAccountID string,
 		return "", "", err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode == 200 {
+	if resp.StatusCode == 201 {
 		rawJSON, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return "", "", err
