@@ -90,7 +90,7 @@ type newIntegrationPayload struct {
 
 // newIntegrationResp - response from a new integration request
 type newIntegrationResp struct {
-	IntegrationID string `json:"integrationId"`
+	IntegrationID string `json:"id"`
 	ARN           string `json:"arn"`
 	ExternalID    string `json:"externalId"`
 	Description   string `json:"description"`
